@@ -6,6 +6,8 @@ require 'bundler/setup'
 require 'gli'
 
 require "ratoap"
+require "ratoap/cli"
+require "ratoap/cli/init"
 
 include GLI::App
 
@@ -18,10 +20,7 @@ command :init do |c|
   c.flag [:d, :driver], desc: 'set driver', type: String, default_value: 'vagrant'
 
   c.action do |global_options, options, args|
-    # Ratoap::CLI::INIT.run(global_options, options, args)
-    puts global_options.inspect
-    puts options.inspect
-    puts args.inspect
+    Ratoap::CLI::Init.new(global_options, options, args).run()
   end
 end
 
