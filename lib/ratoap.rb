@@ -1,5 +1,14 @@
 require "ratoap/version"
+require "ratoap/configuration"
 
 module Ratoap
-  # Your code goes here...
+
+  def self.config
+    Configurtion.config
+  end
+
+  def self.configure(&block)
+    Configurtion.configure(&block)
+  end
+
 end
