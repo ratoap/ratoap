@@ -1,18 +1,24 @@
+require 'gli'
+require "ratoap/cli/base"
+require "ratoap/cli/init"
+
 module Ratoap
   module CLI
-    class Base
+    include GLI::App
+    extend self
 
-      attr_reader :global_options, :options, :args
+    version Ratoap::VERSION
 
-      def initialize(global_options, options, args)
-        @global_options = global_options
-        @options = options
-        @args = args
+    program_desc 'Run any test on any platforms'
+
+    desc 'Init config files'
+    command :init do |c|
+      c.flag [:d, :driver], desc: 'set driver', type: String, default_value: 'vagrant'
+
+      c.action do |global_options, options, args|
+        Ratoap::CLI::Init.new(global_options, options, args).run()
       end
-
-      def run
-      end
-
     end
+
   end
 end

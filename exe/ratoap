@@ -1,28 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'bundler/setup'
-
-require 'gli'
-
 require "ratoap"
 require "ratoap/cli"
-require "ratoap/cli/init"
 
-include GLI::App
-
-version Ratoap::VERSION
-
-program_desc 'Run any test on any platforms'
-
-desc 'Init config files'
-command :init do |c|
-  c.flag [:d, :driver], desc: 'set driver', type: String, default_value: 'vagrant'
-
-  c.action do |global_options, options, args|
-    Ratoap::CLI::Init.new(global_options, options, args).run()
-  end
-end
-
-exit run(ARGV)
+exit Ratoap::CLI.run(ARGV)
 
