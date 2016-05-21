@@ -1,5 +1,4 @@
 require 'gli'
-require "ratoap/cli/base"
 require "ratoap/cli/init"
 
 module Ratoap
