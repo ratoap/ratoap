@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
-$:.push File.expand_path("../../lib", __FILE__)
-
-require "ratoap"
-require "ratoap/cli"
+require_relative '../lib/ratoap'
+require_relative '../lib/ratoap/cli'
 
 exit Ratoap::CLI.run(ARGV)
 
