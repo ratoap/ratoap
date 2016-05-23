@@ -11,7 +11,11 @@ module Ratoap
         end
 
         def create_config_file
-          template ".ratoap.yml", ".ratoap.yml"
+          template ".ratoap.yml"
+        end
+
+        def create_work_dir
+          empty_directory ".ratoap"
         end
       end
     end
