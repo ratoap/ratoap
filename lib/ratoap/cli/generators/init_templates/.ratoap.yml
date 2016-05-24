@@ -1,3 +1,23 @@
 ---
-driver:
-  name: vagrant
+
+drivers:
+  - name: vagrant_ruby
+
+builders:
+  - name: ansible_ruby
+
+platforms:
+  - name: ubuntu-14.04
+    box_url: http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box
+
+tests:
+  - name: rspec
+    driver: vagrant_ruby
+    driver_config: {}
+    builder: ansible_ruby
+    builder_config: {}
+    platforms:
+      ubuntu-14.04:
+        box: ratoap_test_ubuntu-14.04
+    script:
+      - bundle exec rspec
