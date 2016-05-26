@@ -4,7 +4,6 @@ redis:
   host: 127.0.0.1
   port: 6379
   db: 11
-  namespace: ratoap
 
 drivers:
   - name: vagrant_ruby

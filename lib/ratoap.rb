@@ -1,3 +1,5 @@
+require "redis"
+
 require "ratoap/version"
 require "ratoap/configuration"
 
