@@ -1,4 +1,4 @@
-require "thor"
+require 'thor'
 
 module Ratoap
   module CLI

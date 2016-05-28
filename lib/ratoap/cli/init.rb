@@ -1,5 +1,5 @@
-require "ratoap/cli/base"
-require "ratoap/cli//generators/init_generator"
+require_relative 'base'
+require_relative 'generators/init_generator'
 
 module Ratoap
   module CLI

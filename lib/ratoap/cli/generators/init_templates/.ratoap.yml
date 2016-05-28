@@ -8,7 +8,7 @@ redis:
 drivers:
   - name: vagrant_ruby
 
-builders:
+provisioners:
   - name: ansible_ruby
 
 platforms:
