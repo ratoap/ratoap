@@ -7,22 +7,24 @@ redis:
 
 drivers:
   - name: vagrant_ruby
+    settings: {}
 
 provisioners:
   - name: ansible_ruby
+    setting: {}
 
 platforms:
   - name: ubuntu-14.04
-    box_url: http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box
+    driver: vagrant_ruby
+    driver_settings:
+      box: ratoap_test_ubuntu-14.04
+      box_url: http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box
+    provisioner: ansible_ruby
+    provisioner_setting: {}
 
 tests:
-  - name: rspec
-    driver: vagrant_ruby
-    driver_config: {}
-    builder: ansible_ruby
-    builder_config: {}
+  - name: rake test
     platforms:
-      ubuntu-14.04:
-        box: ratoap_test_ubuntu-14.04
+      - name: ubuntu-14.04
     script:
-      - bundle exec rspec
+      - bundle exec rake test

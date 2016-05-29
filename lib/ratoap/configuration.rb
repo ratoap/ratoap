@@ -17,5 +17,39 @@ module Ratoap
       ->(options = redis_config){ Redis.new options }
     end
 
+    config_accessor :drivers do
+      [
+        {
+          name: 'vagrant_ruby',
+          setting: {}
+        }
+      ]
+    end
+
+    config_accessor :provisioners do
+      [
+        {
+          name: 'ansible_ruby',
+          setting: {}
+        }
+      ]
+    end
+
+    config_accessor :platforms do
+      [
+        {
+          name: 'ubuntu-14.04',
+          driver: 'vagrant_ruby',
+          driver_settings: {},
+          provisioner: 'ansible_ruby',
+          provisioner_setting: {}
+        }
+      ]
+    end
+
+    config_accessor :tests do
+      []
+    end
+
   end
 end

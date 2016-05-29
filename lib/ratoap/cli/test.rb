@@ -6,6 +6,8 @@ module Ratoap
 
       def run
         Ratoap.load
+
+        Ratoap.run_test
       end
 
     end
