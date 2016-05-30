@@ -17,7 +17,8 @@ module Ratoap
         sha1sum = sha1.hexdigest
 
         unless Ratoap.redis.script(:exists, sha1sum)
-          Ratoap.redis.script(:load, File.read(file))
+          _sha1sum = Ratoap.redis.script(:load, File.read(file))
+          raise 'sha1sum failed' if _sha1sum != sha1sum
         end
 
         self.data[script_name] = sha1sum
