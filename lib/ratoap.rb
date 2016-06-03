@@ -24,6 +24,7 @@ module Ratoap
   end
 
   def self.run_test
+    require "ratoap-driver-vagrant"
     puts RedisScript.data
   end
 
