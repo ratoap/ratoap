@@ -24,8 +24,25 @@ module Ratoap
   end
 
   def self.run_test
+    require "open3"
     require "ratoap-driver-vagrant"
-    puts RedisScript.data
+
+    Open3.popen3("ratoap-driver-vagrant") do |stdin, stdout, stderr, wait_thr|
+
+      pid = wait_thr.pid
+
+      puts pid
+
+      stdin.close
+
+
+      stdout.close
+      stderr.close
+
+      exit_status = wait_thr.value
+
+      puts exit_status
+    end
   end
 
   def self.config
