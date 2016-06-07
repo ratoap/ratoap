@@ -2,6 +2,7 @@ require 'redis'
 require 'logger'
 require 'active_support/core_ext/module'
 require 'yaml'
+require 'fileutils'
 
 require_relative 'ratoap/version'
 require_relative 'ratoap/configuration'
@@ -27,7 +28,12 @@ module Ratoap
     require "open3"
     require "ratoap-driver-vagrant"
 
-    Open3.popen3("ratoap-driver-vagrant") do |stdin, stdout, stderr, wait_thr|
+    logger_file = File.join(Dir.pwd, '.ratoap', 'ratoap-driver-vagrant.log')
+    FileUtils.rm_rf logger_file if File.exists?(logger_file)
+    FileUtils.mkdir_p File.basename(logger_file)
+    FileUtils.touch logger_file
+
+    Open3.popen3("ratoap-driver-vagrant -l #{logger_file}") do |stdin, stdout, stderr, wait_thr|
 
       pid = wait_thr.pid
 
