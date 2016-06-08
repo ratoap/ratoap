@@ -28,27 +28,35 @@ module Ratoap
     require "open3"
     require "ratoap-driver-vagrant"
 
-    logger_file = File.join(Dir.pwd, '.ratoap', 'ratoap-driver-vagrant.log')
-    FileUtils.rm_rf logger_file if File.exists?(logger_file)
-    FileUtils.mkdir_p File.basename(logger_file)
-    FileUtils.touch logger_file
+    log_file = File.join(Dir.pwd, '.ratoap', 'ratoap-driver-vagrant.log')
+    FileUtils.rm_rf log_file if File.exists?(log_file)
+    FileUtils.mkdir_p File.basename(log_file)
+    FileUtils.touch log_file
+    FileUtils.chmod 0777, log_file
+    File.truncate log_file, 0
 
-    Open3.popen3("ratoap-driver-vagrant -l #{logger_file}") do |stdin, stdout, stderr, wait_thr|
+    log_synchronizer_process_pid = Process.fork do
+      writer = File.open(log_file, 'r')
+      writer.wait_readable
+      while true
+        if line = writer.gets
+          puts line
+        end
+      end
+    end
+
+    Open3.popen3("ratoap-driver-vagrant -l #{log_file}") do |stdin, stdout, stderr, wait_thr|
 
       pid = wait_thr.pid
 
-      puts pid
-
       stdin.close
-
-
       stdout.close
       stderr.close
 
       exit_status = wait_thr.value
-
-      puts exit_status
     end
+
+    Process.kill("HUP", log_synchronizer_process_pid)
   end
 
   def self.config
