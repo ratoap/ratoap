@@ -45,16 +45,14 @@ module Ratoap
       end
     end
 
-    Open3.popen3("ratoap-driver-vagrant -l #{log_file}") do |stdin, stdout, stderr, wait_thr|
-
-      pid = wait_thr.pid
-
-      stdin.close
-      stdout.close
-      stderr.close
-
-      exit_status = wait_thr.value
+    client_driver_vagrant_process_pid = Process.fork do
+      Open3.popen3("ratoap-driver-vagrant -l #{log_file}") do |stdin, stdout, stderr, wait_thr|
+        pid = wait_thr.pid
+        exit_status = wait_thr.value
+      end
     end
+
+    _, client_driver_vagrant_process_status = Process.wait2 client_driver_vagrant_process_pid
 
     Process.kill("HUP", log_synchronizer_process_pid)
   end
