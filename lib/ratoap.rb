@@ -3,6 +3,7 @@ require 'logger'
 require 'active_support/core_ext/module'
 require 'yaml'
 require 'fileutils'
+require 'json'
 
 require_relative 'ratoap/version'
 require_relative 'ratoap/configuration'
@@ -52,8 +53,18 @@ module Ratoap
       end
     end
 
-    _, client_driver_vagrant_process_status = Process.wait2 client_driver_vagrant_process_pid
+    i = 0
+    while i <= 10 do
+      i += 1
+      n = redis.publish("ratoap:client_conn", JSON.dump({type: :driver, name: :vagrant_ruby}))
+      if n == 0
+      end
+      sleep 3
+    end
 
+    # _, client_driver_vagrant_process_status = Process.wait2 client_driver_vagrant_process_pid
+
+    Process.kill("HUP", client_driver_vagrant_process_pid)
     Process.kill("HUP", log_synchronizer_process_pid)
   end
 
