@@ -56,8 +56,8 @@ module Ratoap
     i = 0
     while i <= 10 do
       i += 1
-      n = redis.publish("ratoap:client_conn", JSON.dump({type: :driver, name: :vagrant_ruby}))
-      if n == 0
+      n = redis.publish("ratoap:client_conn", JSON.dump({name: :driver_vagrant_ruby}))
+      if n > 0
       end
       sleep 3
     end
