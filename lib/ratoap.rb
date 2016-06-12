@@ -53,16 +53,26 @@ module Ratoap
       end
     end
 
+    client_names = []
+    config.drivers.each do |driver|
+      client_names << "driver_#{driver['name']}"
+    end
+    config.provisioners.each do |provisioner|
+      client_names << "provisioner_#{provisioner['name']}"
+    end
+
     i = 0
     while i <= 10 do
       i += 1
-      n = redis.publish("ratoap:client_conn", JSON.dump({name: :driver_vagrant_ruby}))
-      if n > 0
+      client_names.each do |client_name|
+        n = redis.publish("ratoap:client_conn", JSON.dump({name: client_name}))
+
+        if n > 0
+        end
       end
+
       sleep 3
     end
-
-    # _, client_driver_vagrant_process_status = Process.wait2 client_driver_vagrant_process_pid
 
     Process.kill("HUP", client_driver_vagrant_process_pid)
     Process.kill("HUP", log_synchronizer_process_pid)
