@@ -8,8 +8,7 @@ require 'json'
 require_relative 'ratoap/version'
 require_relative 'ratoap/configuration'
 require_relative 'ratoap/redis_script'
-require_relative 'ratoap/sub_progress_log_synchronizer'
-require_relative 'ratoap/sub_progress_client'
+require_relative 'ratoap/client_progress'
 
 module Ratoap
 
@@ -30,11 +29,11 @@ module Ratoap
   end
 
   def self.run_test
-    require "open3"
     require "ratoap-driver-vagrant"
 
-    sub_progress_log_synchronizer = Ratoap::SubProgressLogSynchronizer.new "ratoap-driver-vagrant"
-    sub_progress_client = Ratoap::SubProgressClient.new "ratoap-driver-vagrant -l #{sub_progress_log_synchronizer.file}"
+    client_progress = Ratoap::ClientProgress.new "driver-vagrant"
+    client_progress.enable_log_sync
+    client_progress.run
 
     client_names = []
     config.drivers.each do |driver|
