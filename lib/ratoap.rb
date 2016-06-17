@@ -9,6 +9,7 @@ require_relative 'ratoap/version'
 require_relative 'ratoap/configuration'
 require_relative 'ratoap/redis_script'
 require_relative 'ratoap/client_progress'
+require_relative 'ratoap/client_conn_progress'
 
 module Ratoap
 
@@ -43,23 +44,8 @@ module Ratoap
       client_names << "provisioner_#{provisioner['name']}"
     end
 
-    redis.set "ratoap:client_conn:wait", client_names.to_json
-
-    i = 0
-
-    r = while i <= 10 do
-      i += 1
-
-      wait_conn_client_names = JSON.parse(redis.get("ratoap:client_conn:wait"))
-      break 1 if wait_conn_client_names.size == 0
-
-      redis.publish("ratoap:client_conn", JSON.dump({act: :wait, redis_scripts: RedisScript.data}))
-      sleep 3
-    end
-
-    if r != 1
-      redis.publish("ratoap:client_conn", JSON.dump({act: :quit}))
-    end
+    client_conn_progress = Ratoap::ClientConnProgress.new client_names
+    client_conn_progress.run
 
   end
 
