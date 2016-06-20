@@ -32,21 +32,30 @@ module Ratoap
   def self.run_test
     require "ratoap-driver-vagrant"
 
-    client_progress = Ratoap::ClientProgress.new "driver-vagrant"
-    client_progress.enable_log_sync
-    client_progress.run
+    client_progresses = []
 
-    client_names = []
-    config.drivers.each do |driver|
-      client_names << "driver_#{driver['name']}"
-    end
-    config.provisioners.each do |provisioner|
-      client_names << "provisioner_#{provisioner['name']}"
+    client_names.each do |client_name|
+      client_progress = Ratoap::ClientProgress.new client_name
+      client_progress.enable_log_sync
+      client_progress.run
+
+      client_progresses << client_progress
     end
 
     client_conn_progress = Ratoap::ClientConnProgress.new client_names
     client_conn_progress.run
 
+  end
+
+  def self.client_names
+    [].tap do |names|
+      config.drivers.each do |driver|
+        names << "driver-#{driver['name']}"
+      end
+      config.provisioners.each do |provisioner|
+        names << "provisioner-#{provisioner['name']}"
+      end
+    end
   end
 
   def self.config
