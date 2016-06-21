@@ -45,6 +45,9 @@ module Ratoap
     client_conn_progress = Ratoap::ClientConnProgress.new client_names
     client_conn_progress.run
 
+    sleep 60
+    client_conn_progress.exit
+
   end
 
   def self.client_names

@@ -5,6 +5,7 @@ module Ratoap
 
     attr_reader :names
     attr_reader :redis
+    attr_reader :main_pid
 
     def initialize(names)
       @names = names
@@ -15,21 +16,21 @@ module Ratoap
     def run
       redis.set "ratoap:client_conn:wait", names.to_json
 
-      i = 0
+      @main_pid = Process.fork do
+        while true do
+          wait_conn_client_names = JSON.parse(redis.get("ratoap:client_conn:wait"))
+          break 1 if wait_conn_client_names.size == 0
 
-      r = while i <= 10 do
-        i += 1
-
-        wait_conn_client_names = JSON.parse(redis.get("ratoap:client_conn:wait"))
-        break 1 if wait_conn_client_names.size == 0
-
-        redis.publish("ratoap:client_conn", JSON.dump({act: :wait, redis_scripts: RedisScript.data}))
-        sleep 3
+          redis.publish("ratoap:client_conn", JSON.dump({act: :wait, redis_scripts: RedisScript.data}))
+          sleep 3
+        end
       end
+    end
 
-      if r != 1
-        redis.publish("ratoap:client_conn", JSON.dump({act: :quit}))
-      end
+    def exit
+      redis.publish("ratoap:client_conn", JSON.dump({act: :quit}))
+
+      Process.kill("HUP", main_pid)
     end
 
     private
