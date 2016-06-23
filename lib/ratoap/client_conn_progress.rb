@@ -21,7 +21,9 @@ module Ratoap
           wait_conn_client_names = JSON.parse(redis.get("ratoap:client_conn:wait"))
           break 1 if wait_conn_client_names.size == 0
 
-          redis.publish("ratoap:client_conn", JSON.dump({act: :wait, redis_scripts: RedisScript.data}))
+          Ratoap.logger.info "publish ratoap:client_conn"
+
+          redis.publish("ratoap:client_conn", JSON.dump({act: :wait, redis_script_shas: RedisScript.data}))
           sleep 3
         end
       end
