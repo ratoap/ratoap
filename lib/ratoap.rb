@@ -34,8 +34,8 @@ module Ratoap
 
     client_progresses = []
 
-    client_names.each do |client_name|
-      client_progress = Ratoap::ClientProgress.new client_name
+    client_names.each do |client_name, settings|
+      client_progress = Ratoap::ClientProgress.new client_name, settings
       client_progress.enable_log_sync
       client_progress.run
 
@@ -45,18 +45,18 @@ module Ratoap
     client_conn_progress = Ratoap::ClientConnProgress.new client_names
     client_conn_progress.run
 
-    sleep 60
+    sleep 600
     client_conn_progress.exit
 
   end
 
   def self.client_names
-    [].tap do |names|
+    {}.tap do |names|
       config.drivers.each do |driver|
-        names << "driver-#{driver['name']}"
+        names["driver-#{driver['name']}"] = driver['settings']
       end
       config.provisioners.each do |provisioner|
-        names << "provisioner-#{provisioner['name']}"
+        names["provisioner-#{provisioner['name']}"] = provisioner['settings']
       end
     end
   end

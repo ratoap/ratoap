@@ -7,8 +7,8 @@ module Ratoap
     attr_reader :redis
     attr_reader :main_pid
 
-    def initialize(names)
-      @names = names
+    def initialize(names_hash)
+      @names = names_hash.keys
 
       @redis = Ratoap.redis
     end

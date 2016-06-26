@@ -3,11 +3,12 @@ require "open3"
 module Ratoap
   class ClientProgress
 
-    attr_reader :name, :log_sync
+    attr_reader :name, :settings, :log_sync
     attr_reader :main_pid, :log_sync_pid
 
-    def initialize(name)
+    def initialize(name, settings)
       @name = name
+      @settings = settings
       @log_sync = false
     end
 
@@ -17,6 +18,8 @@ module Ratoap
     end
 
     def run
+      return unless settings['auto_run']
+
       cmd = "ratoap-#{@name}"
 
       if @log_sync
