@@ -10,7 +10,7 @@ module Ratoap
     def self.load
       dir = File.expand_path('../redis_scripts', __FILE__)
 
-      [:get_connect_identity].each do |script_name|
+      [:get_conn_identity].each do |script_name|
         file = File.join dir, "ratoap_#{script_name}.lua"
 
         sha1 = Digest::SHA1.file file
